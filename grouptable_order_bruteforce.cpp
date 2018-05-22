@@ -1,6 +1,4 @@
 
-#include "stdafx.h"
-
 #include<cstdio>
 #include<cstdlib>
 #include<cmath>
@@ -287,7 +285,3 @@ int main()
 	}
 
 }
-
-/*
-
-*/
