@@ -158,15 +158,25 @@ void sol(int u, int ep)
 	}
 	else if (ep >= E[u].size())
 		sol(u + 1, 0);
-	else if (O[u][ep].size() <= 1)
+	else if (O[u][ep].size() <= 1 || (O[u][ep].size() == 2 && O[u][ep][0] == t))
 		sol(u, ep + 1);
 	else
 	{
 		do
 		{
 			//random_shuffle(O[u][ep].begin() + (O[u][ep][0] == t), O[u][ep].end() - 1);
-			sol(u, ep + 1);
-		} while (next_permutation(O[u][ep].begin() + (O[u][ep][0] == t), O[u][ep].end() - 1));
+			bool ok = 1;
+			for (int i = O[u][ep].size() - 2; O[u][ep].back() != E[u][ep] && O[u][ep][i] != E[u][ep]; i--)
+			{
+				if (O[u][ep][i] > O[u][ep][i + 1])
+				{
+					ok = 0;
+					break;
+				}
+			}
+			if (ok)
+				sol(u, ep + 1);
+		} while (next_permutation(O[u][ep].begin() + (O[u][ep][0] == t), O[u][ep].end()));
 	}
 }
 
@@ -228,19 +238,19 @@ int main()
 				O[i][j].clear();
 			else
 			{
-				for (int k = 0; k < O[i][j].size(); k++)
-					if (O[i][j][k] == E[i][j])
-					{
-						swap(O[i][j][k], O[i][j].back());
-						break;
-					}
+				//for (int k = 0; k < O[i][j].size(); k++)
+				//	if (O[i][j][k] == E[i][j])
+				//	{
+				//		swap(O[i][j][k], O[i][j].back());
+				//		break;
+				//	}
 				for (int k = 0; k < O[i][j].size(); k++)
 					if (O[i][j][k] == t)
 					{
 						swap(O[i][j][k], O[i][j][0]);
 						break;
 					}
-				sort(O[i][j].begin() + (O[i][j][0] == t), O[i][j].end() - 1);
+				sort(O[i][j].begin() + (O[i][j][0] == t), O[i][j].end());
 			}
 		}
 	}
@@ -298,7 +308,8 @@ int main()
 			print(b);
 		}
 	}
-
+	printf("\nscanfing\n");
+	scanf("%d%d%d", &minms, &minms, &minms);
 }
 
 /*
