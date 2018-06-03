@@ -16,8 +16,8 @@ using namespace std;
 #define y second
 
 const int INF = (1 << 30) - 1;
-const int n = 5;
-const int s = 0, t = 1;
+const int n = 8;
+const int s = 6, t = 7;
 int m, T[n][n], maxcnt = -INF, minnokmax = INF, ncycleorder;
 bool A[n][n];
 vector<pair<int, int>> E;
@@ -33,6 +33,11 @@ void print(pair<int, int> &p)
 
 void print(int b)
 {
+	if (b == INF || b == -INF)
+	{
+		printf("n/a\n");
+		return;
+	}
 	for (int i = 0; i < m; i++)
 		if (b & 1 << i)
 			printf("%d - %d\n", E[i].x, E[i].y);
@@ -80,7 +85,7 @@ void sol(int u)
 					okmin = min(okmin, ms);
 					okmax = max(okmax, ms);
 					ok = b;
-					dp[ncycleorder][b] = 1;
+					dp.back()[b] = 1;
 				}
 				else
 				{
@@ -101,7 +106,7 @@ void sol(int u)
 				maxcnt = cnt;
 				printf("update maxcnt=%d\n", maxcnt);
 				printf("~~%d %d   %d %d\n", okmin, okmax, nokmin, nokmax);
-				if (maxcnt < 319)
+				if (maxcnt < 10000)
 					continue;
 				for (int i = 0; i < n; i++)
 				{
@@ -116,7 +121,6 @@ void sol(int u)
 				printf("===========not ok\n");
 				print(nok);
 			}
-			ncycleorder++;
 		}
 	}
 	else
@@ -149,18 +153,17 @@ struct DS
 
 int main()
 {
-
-	for (int i = 0; i < n; i++)
-		for (int j = i + 1; j < n; j++)
-			E.push_back({ i, j });
-	/*
-	for (int i = 0; i < n / 2; i++)
-		for (int j = n / 2; j < n; j++)
-			E.push_back({ i, j });
-	*/
+	for (int i = 0; i < 3; i++)
+		for (int j = 3; j < 6; j++)
+			if (i != 0 || j != 3)
+				E.push_back({ i, j });
+	E.push_back({ 0, 6 });
+	E.push_back({ 6, 7 });
+	E.push_back({ 7, 3 });
 
 	m = E.size();
 	C.assign(1 << m, 0);
+	printf("n=%d m=%d\n", n, m);
 
 	int ncon = 0;
 	for (int b = 0; b < 1 << m; b++)
@@ -183,6 +186,7 @@ int main()
 		sort(O[i].begin(), O[i].end());
 
 	sol(0);
+	ncycleorder = dp.size();
 	printf("ncycleorder=%d\n", ncycleorder);
 
 	for (int p = 0, block = max(1, ncycleorder / 10); !M.empty(); )
@@ -227,5 +231,4 @@ int main()
 			print(b);
 		}
 	}
-
 }
